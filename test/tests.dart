@@ -44,16 +44,14 @@ void main(){
       print('adding data in second test...');
       final tx = db.transaction('foo', 'readwrite');
       final objectStore = tx.objectStore('foo');
-      objectStore.add({'bar' : 1, 'baz' : 2}).then((addedKey) {
+      expect(objectStore.add({'bar' : 1, 'baz' : 2}).then((addedKey) {
         print('object added to store with key=$addedKey');
-      }, onError: (e) => print('error adding object!'));
-
-      tx.completed.then((_) {
-        print('transaction complete.');
-      },
-      onError: (e) => print('transaction errored!'));
-      expect(true, isTrue);
+        expect(tx.completed.then((_) {
+          print('transaction complete.');
+        }, onError: (e) => print('transaction errored!')), completes);
+      }, onError: (e) => print('error adding object!')), completes);
     });
+
     test('call setup and teardown', (){
       print('just setup and teardown being called in first test.');
       expect(true, isTrue);
